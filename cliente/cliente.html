@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css">    
+    
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+    
+    <script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.js"></script><style type="text/css"></style>
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
+
+    
+    <title>Cliente - Micro Serviços</title>
+</head>
+<body class="blue-grey darken-3">
+    <div class="container p5 mt-10 mb-10" style="margin: 40px auto;">
+        <h1 style="color: aliceblue;" class="center-align mt-10 mb-10">Cliente - Micro Serviços</h1>
+        <div class="content col-12 d-flex align-items-center justify-content-center m-2">
+            <div class="col-5 m-auto" id="secao_servico1">
+                <span class="text-light center-align">Buscar resultados</span>
+                <div class="row mt-5">
+                    <div class="input-field col s6">
+                        <select class="text-light" placeholder="Nome da loteria" id="nome_loteria" name="nome_loteria">
+                            <option value="lotofacil" selected disabled>Selecione uma loteria</option>
+                            <option value="lotofacil">lotofacil</option>
+                            <option value="mega-sena">mega-sena</option>
+                            <option value="quina">quina</option>
+                            <option value="lotomania">lotomania</option>
+                            <option value="timemania">timemania</option>
+                            <option value="dupla-sena">dupla-sena</option>
+                            <option value="loteria-federal">loteria-federal</option>
+                            <option value="dia-de-sorte">dia-de-sorte</option>
+                            <option value="super-sete">super-sete</option>
+                        </select>
+                        <label for="nome_loteria">Loteria</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <input id="concurso" placeholder="Nº concurso" type="number" class="validate text-light">
+                        <label for="concurso">Concurso</label>
+                    </div>
+                    <button onclick="buscarLoteria()" class="waves-effect waves-light btn-small">Buscar</button>
+                </div>
+                <div class="row">
+                    <div class="alert alert-warning d-none" id="res_error"><span id="res_error_mensagem"></span></div>
+                    <div id="secao_resultados" class="card l6 s6 m3 l3 center d-none">
+                        <div class="mt-3">
+                            <div>
+                                <span id="res_nome_loteria">LOTERIA</span> - <span id="res_data_concurso"></span>
+                            </div>
+                            <div>
+                                <span>Concurso: </span><span id="res_numero_concurso"></span>
+                            </div>
+                        </div>
+                        <div class="card-content d-flex flex-column" style="text-align: justify;">
+                            <div><span>Premiação: </span> <span id="res_premiacao"></span> </div>
+                            <div><span>Local: </span> <span id="res_local"></span> </div>
+                    </div>
+
+                    <span>DEZENAS</span>
+                        <div class="card-content grey lighten-4" id="res_resultado_dezenas">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-5 m-auto" id="secao_servico2">
+                <span class="text-light center-align mt-10">Salvar jogos - Digite seus números favoritos</span>
+                <div id="formulario_salva_jogos">
+                    <form class="col-auto m-auto" id="form_salvar">
+                        <div class="text-light col-8 mt-3" style="margin-left: -10px;" aria-label=".form-select-lg example">
+                            <select name="campo_loteria" id="campo_loteria">
+                                <option value="" selected disabled>Selecione uma loteria</option>
+                                <option value="lotofacil">lotofacil</option>
+                                <option value="mega-sena">mega-sena</option>
+                                <option value="quina">quina</option>
+                                <option value="lotomania">lotomania</option>
+                                <option value="timemania">timemania</option>
+                                <option value="dupla-sena">dupla-sena</option>
+                                <option value="loteria-federal">loteria-federal</option>
+                                <option value="dia-de-sorte">dia-de-sorte</option>
+                                <option value="super-sete">super-sete</option>
+                            </select>
+                        </div>
+                        <div class="row d-flex">
+                            <input style="margin: 3px" id="campo1" name="campo1" class="col s1 text-light" type="tel" maxlength="2" />
+                            <input style="margin: 3px" id="campo2" name="campo2" class="col s1 text-light" type="tel" maxlength="2" />
+                            <input style="margin: 3px" id="campo3" name="campo3" class="col s1 text-light" type="tel" maxlength="2" />
+                            <input style="margin: 3px" id="campo4" name="campo4" class="col s1 text-light" type="tel" maxlength="2" />
+                            <input style="margin: 3px" id="campo5" name="campo5" class="col s1 text-light" type="tel" maxlength="2" />
+                        </div>
+                        <div class="row d-flex">
+                            <input style="margin: 3px" id="campo6" name="campo6" class="col s1 text-light" type="tel" maxlength="2" />
+                            <input style="margin: 3px" id="campo7" name="campo7" class="col s1 text-light" type="tel" maxlength="2" />
+                            <input style="margin: 3px" id="campo8" name="campo8" class="col s1 text-light" type="tel" maxlength="2" />
+                            <input style="margin: 3px" id="campo9" name="campo9" class="col s1 text-light" type="tel" maxlength="2" />
+                            <input style="margin: 3px" id="campo10" name="campo10" class="col s1 text-light" type="tel" maxlength="2" />
+                        </div>
+                        <div class="row d-flex">
+                            <input style="margin: 3px" id="campo11" name="campo11" class="col s1 text-light" type="tel" maxlength="2" />
+                            <input style="margin: 3px" id="campo12" name="campo12" class="col s1 text-light" type="tel" maxlength="2" />
+                            <input style="margin: 3px" id="campo13" name="campo13" class="col s1 text-light" type="tel" maxlength="2" />
+                            <input style="margin: 3px" id="campo14" name="campo14" class="col s1 text-light" type="tel" maxlength="2" />
+                            <input style="margin: 3px" id="campo15" name="campo15" class="col s1 text-light" type="tel" maxlength="2" />
+                        </div>
+                        <button type="button" onclick="gravarJogos()" class="d-flex waves-effect waves-light btn-small m-auto">Salvar</button>
+                    </form>
+                </div>
+                <div class="d-flex text-center mt-5 w-100 m-auto d-none mensagem_retorno_gravar_jogo"><span class="mensagem_retorno_gravar_jogo_span m-auto w-100 alert alert-info"></span></div>
+            </div>
+        </div>
+        <div class="col s7 push-s5" id="newsletter">
+            <h3 style="margin-left: 33px; color: aliceblue;" id="tag_titulo_noticias">Noticias</h3>
+            <div id="noticias">
+                <ul style="margin: auto; display: flex; flex-wrap: wrap" id="lista_noticias">
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    const URL_SERVICO1 =    'http://localhost:8001/'
+    const URL_SERVICO2 =    'http://localhost:8002/'
+    const URL_SERVICO3 =    'http://localhost:8003/'
+
+    async function buscarDadosLoteria(loteria, concurso = null) {
+        var URL_SERVICO2_REDIRECIONAR = `${URL_SERVICO2}${loteria}`
+        if (concurso) {URL_SERVICO2_REDIRECIONAR = URL_SERVICO2+'concurso/'+concurso+'/'+loteria}
+        try {
+            let res = await axios({
+                url: URL_SERVICO2_REDIRECIONAR,
+                method: 'get',
+                timeout: 8000,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Content-type': 'Access-Control-Allow-Methods'
+                }
+            })
+            return res.data
+        }
+        catch (err) {
+            var data = {"mensagem": "Erro, serviço indisponível..."}
+            return data
+        }
+    }
+    async function buscarDadosNoticias() {
+        try {
+            let res = await axios({
+                url: URL_SERVICO1,
+                method: 'get',
+                timeout: 8000,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Content-type': 'Access-Control-Allow-Methods'
+                }
+            })  
+            return res.data
+        }
+        catch (err) {
+            return false
+        }
+    }
+    async function gravarJogos () {
+        var campo_loteria = $('#campo_loteria').val()
+
+        if (!campo_loteria) {
+            $('.mensagem_retorno_gravar_jogo_span').removeClass('alert-info')
+            $('.mensagem_retorno_gravar_jogo_span').addClass('alert-danger')
+            $('.mensagem_retorno_gravar_jogo_span').text("Por favor, preencha a loteria.")
+            $(".mensagem_retorno_gravar_jogo").removeClass('d-none')
+
+            return
+        }
+        const dados = $('#form_salvar').serialize()
+            try {
+                const resp = await axios.post(URL_SERVICO3, dados);
+
+                if (resp.data.resposta == "sucesso") {
+                    $('.mensagem_retorno_gravar_jogo_span').removeClass('alert-danger')
+                    $('.mensagem_retorno_gravar_jogo_span').addClass('alert-info')
+                    $('.mensagem_retorno_gravar_jogo_span').text(resp.data.mensagem)
+                    $(".mensagem_retorno_gravar_jogo").removeClass('d-none')
+                } else {
+                    $('.mensagem_retorno_gravar_jogo_span').removeClass('alert-info')
+                    $('.mensagem_retorno_gravar_jogo_span').addClass('alert-danger')
+                    $('.mensagem_retorno_gravar_jogo_span').text(resp.data.mensagem)
+                    $(".mensagem_retorno_gravar_jogo").removeClass('d-none')
+                }
+                setInterval(()=> {
+                    $('.mensagem_retorno_gravar_jogo_span').text('')
+                    $(".mensagem_retorno_gravar_jogo").addClass('d-none')
+                },3000)
+            }
+            catch (err) {
+                $('.mensagem_retorno_gravar_jogo_span').removeClass('alert-info')
+                $('.mensagem_retorno_gravar_jogo_span').addClass('alert-danger')
+                $('.mensagem_retorno_gravar_jogo_span').text("Serviço3 indisponível...")
+                $(".mensagem_retorno_gravar_jogo").removeClass('d-none')
+
+                setInterval(()=> {
+                    $('.mensagem_retorno_gravar_jogo_span').text('')
+                    $(".mensagem_retorno_gravar_jogo").addClass('d-none')
+                },5000)
+            }
+            $('#form_salvar').each (function(){
+                this.reset();
+                });
+    }
+
+    function buscarLoteria () {
+        const loteria =  document.getElementById('nome_loteria').value
+        const concurso =  document.getElementById('concurso').value
+        
+        const secao_resultados =  document.getElementById('secao_resultados')
+        var res_nome_loteria = document.getElementById('res_nome_loteria')
+        var res_data_concurso = document.getElementById('res_data_concurso')
+        var res_numero_concurso = document.getElementById('res_numero_concurso')
+        var res_premiacao = document.getElementById('res_premiacao')
+        var res_local = document.getElementById('res_local')
+
+        const res_resultado_dezenas = document.getElementById('res_resultado_dezenas')
+        const res_error = document.getElementById('res_error')
+        const res_error_mensagem = document.getElementById('res_error_mensagem')
+
+        buscarDadosLoteria(loteria,concurso)
+        .then(res => {
+            if (res.mensagem === 'Erro, serviço indisponível...') {
+                res_error.classList.add('alert-danger')
+                res_error.classList.remove('d-none')
+                res_error_mensagem.innerText = 'Erro, serviço indisponível...'
+                return false
+            }
+            $('.div_resultados').remove()
+            res_nome_loteria.innerText = res.nome
+            res_data_concurso.innerText = res.data
+            res_numero_concurso.innerText = res.concurso
+            res_premiacao.innerText = `Maior prêmio R$ ${res.premiacoes[0].premio}`
+            res_local.innerText = res.local
+
+            Object.keys(res.dezenas).map(function(key, index) {
+                const span_resultado_dezenas = document.createElement('p')
+                const div = document.createElement('div')
+                div.className = 'div_resultados'
+                res_resultado_dezenas.appendChild(div)
+                div.appendChild(span_resultado_dezenas)
+
+                span_resultado_dezenas.innerHTML = res.dezenas[key]
+                span_resultado_dezenas.className = "resultados_dezenas_r d-flex justify-content-center m-1 circle red col s1 text-light"
+                
+            })
+            
+
+            res_error.classList.add('d-none')
+            secao_resultados.classList.remove('alert-danger')
+            secao_resultados.classList.remove('d-none')
+        }).catch(err => {
+            res_nome_loteria.innerText = ''
+            res_data_concurso.innerText = ''
+            res_numero_concurso.innerText = ''
+            res_premiacao.innerText = ''
+            res_local.innerText = ''
+            secao_resultados.classList.add('d-none')
+            res_error.classList.remove('alert-danger')
+            res_error.classList.remove('d-none')
+            res_error_mensagem.innerText = "Loteria e/ou concurso não encontrados"
+        })
+    }
+    function buscarNoticias () {
+        var noticias = false
+        buscarDadosNoticias()
+        .then(res => {
+            var ul_noticias = document.getElementById("lista_noticias")
+            var li = document.createElement("li");
+            var tag_titulo_noticias = document.getElementById("tag_titulo_noticias")
+            
+            if (!res) {
+                var resposta = ul_noticias.appendChild(li)
+                resposta.style.color = "#ff0000"
+                resposta.style.marginLeft = "33px"
+                resposta.innerText = "Noticias indisponíveis..."
+            }
+            tag_titulo_noticias.innerText = "Noticias "+res.channel.title
+            Object.keys(res.channel.item).map(function(key, index) {
+                var li_dinamico = document.createElement("li");
+                var artigo_dinamico = document.createElement("article");
+                var link_dinamico = document.createElement("a");
+                ul_noticias.appendChild(li_dinamico)
+                
+                var link = li_dinamico.appendChild(link_dinamico)
+                var descricao = li_dinamico.appendChild(artigo_dinamico)
+                
+                li_dinamico.className = "center-align card-panel hoverable"
+                li_dinamico.style.minWidth = "45%"
+                li_dinamico.style.minHeight = "25rem"
+                li_dinamico.style.width = "45%"
+                li_dinamico.style.Height = "25rem"
+                li_dinamico.style.margin = "10px auto"
+
+                link.style.fontSize = "17pt"
+                link.style.textDecoration = "none"
+                link.style.textAlign = "justify"
+
+                descricao.style.textAlign = "justify"
+
+                link.innerText = res.channel.item[key].title
+                link.href = res.channel.item[key].link
+                descricao.innerHTML = res.channel.item[key].description
+            });
+            for (let image of document.getElementsByTagName("img")) {
+                image.className = "responsive-img"
+            }
+        }).catch(res => {
+            return
+        })
+    }
+
+    buscarNoticias()
+    $(document).ready(function() {
+        $('select').material_select();
+    });
+</script>
